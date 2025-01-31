@@ -14,15 +14,16 @@ export default function ArticleList() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch("http://localhost:5001/swagger/v1/swagger.json") // API-URL prüfen!
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Fehler beim Abrufen der Daten");
-                }
-                return response.json();
+        fetch("http://localhost:5100/api/products")
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("API Response:", data); // Debugging
+                setArticles(data.$values); // <-- Hier wird das Array extrahiert
             })
-            .then((data) => setArticles(data))
-            .catch((error) => setError(error.message));
+            .catch((error) => {
+                console.error("Fehler beim Abrufen der Daten:", error);
+                setError(error.message);
+            });
     }, []);
 
     return (
